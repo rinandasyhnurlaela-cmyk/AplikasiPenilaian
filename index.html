@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Evaluation Engine &bull; Sistem Analisis Capaian Pembelajaran</title>
+  <meta name="description" content="Sistem analitik evaluasi kinerja belajar mahasiswa, diagnostik capaian kompetensi, dan visualisasi distribusi nilai skala desil terpadu.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient-glow"></div>
+
+  <!-- Kontainer Utama Berorientasi Landscape Dashboard -->
+  <main class="app app-landscape" role="main">
+    <!-- ===== HEADER APLIKASI ===== -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="header-badge">
+          <span class="pulse-dot"></span>
+          <span>Academic Analytics Engine &bull; Modul Evaluasi Terpadu</span>
+        </div>
+
+        <!-- Widget Waktu & Tanggal Realtime -->
+        <div class="clock-widget" id="clockWidget" aria-label="Waktu Sistem Realtime">
+          <div class="date-chip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span id="lblTanggal">Memuat tanggal...</span>
+          </div>
+          <div class="time-chip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="lblJam">00:00:00</span>
+          </div>
+        </div>
+      </div>
+
+      <h1 class="header-title">Sistem Diagnostik &amp; Evaluasi Capaian Akademik</h1>
+      <p class="header-subtitle">Platform terstandarisasi untuk evaluasi performa belajar mahasiswa, verifikasi ambang kelulusan, dan pemodelan predikat kompetensi.</p>
+    </header>
+
+    <!-- ===== LAYOUT GRID LANDSCAPE (2 KOLOM TERSTRUKTUR) ===== -->
+    <div class="dashboard-grid">
+      
+      <!-- KOLOM KIRI: INSTRUMEN FORMULIR INPUT -->
+      <section class="panel panel-input" aria-labelledby="judul-form">
+        <div class="panel-header">
+          <h2 id="judul-form" class="judul-panel">INSTRUMEN INPUT PENILAIAN</h2>
+          <span class="panel-hint">Standar Skala 0 &ndash; 100</span>
+        </div>
+
+        <!-- Simulasi Kasus Uji Akademik (Preset) -->
+        <div class="preset-box">
+          <span class="preset-title">Simulasi Kasus Uji Akademik:</span>
+          <div class="preset-pills">
+            <button type="button" class="btn-preset" data-nilai="92" data-hadir="90">Sangat Memuaskan (A)</button>
+            <button type="button" class="btn-preset" data-nilai="74" data-hadir="85">Memuaskan (B)</button>
+            <button type="button" class="btn-preset" data-nilai="62" data-hadir="80">Cukup (C)</button>
+            <button type="button" class="btn-preset" data-nilai="50" data-hadir="90">Defisit Nilai Ujian</button>
+            <button type="button" class="btn-preset" data-nilai="85" data-hadir="65">Defisit Presensi Kuliah</button>
+          </div>
+        </div>
+
+        <form id="formPenilaian" novalidate autocomplete="off">
+          <div class="form-group">
+            <label for="txtNilai">
+              <span>Nilai Akhir Kumulatif (Ujian)</span>
+              <span class="syarat-label">Standar Kelulusan &ge; 60</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">🎯</span>
+              <input 
+                type="text" 
+                id="txtNilai" 
+                placeholder="Masukkan nilai (0 - 100)" 
+                inputmode="numeric"
+                aria-describedby="txtNilaiHelp"
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="txtKehadiran">
+              <span>Tingkat Presensi Perkuliahan (%)</span>
+              <span class="syarat-label">Standar Presensi &ge; 75%</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">📅</span>
+              <input 
+                type="text" 
+                id="txtKehadiran" 
+                placeholder="Masukkan persentase hadir (0 - 100)" 
+                inputmode="numeric"
+                aria-describedby="txtHadirHelp"
+              >
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+
+          <div class="tombol-baris">
+            <button type="submit" id="btnEvaluasi" class="btn btn-utama">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+              <span>EVALUASI CAPAIAN</span>
+            </button>
+            <button type="button" id="btnReset" class="btn btn-garis">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              <span>RESET FORM</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="academic-criteria-card">
+          <span class="criteria-title">Rubrik Kualifikasi Akademik:</span>
+          <div class="criteria-grid">
+            <div class="criteria-item"><strong>Grade A:</strong> &ge; 85</div>
+            <div class="criteria-item"><strong>Grade B:</strong> 70 &ndash; 84</div>
+            <div class="criteria-item"><strong>Grade C:</strong> 60 &ndash; 69</div>
+            <div class="criteria-item"><strong>Grade D:</strong> &lt; 60 (Tidak Lulus)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- KOLOM KANAN: PANEL GRAFIK LANDSCAPE & KEPUTUSAN KELULUSAN -->
+      <div class="dashboard-right-column">
+        
+        <!-- PANEL GRAFIK LANDSCAPE & STATUS KELULUSAN -->
+        <section class="panel panel-hasil" aria-labelledby="judul-hasil">
+          <div class="panel-header">
+            <h2 id="judul-hasil" class="judul-panel">DIAGNOSTIK &amp; KEPUTUSAN KELULUSAN</h2>
+            <span class="badge-tag">Evaluasi Multikriteria</span>
+          </div>
+
+          <div class="hasil-card">
+            <!-- Baris Status & Predikat Kompetensi -->
+            <div class="status-row">
+              <div class="status-block">
+                <span class="meta-label">Keputusan Akademik:</span>
+                <div id="lblStatus" class="status">Status: -</div>
+              </div>
+              <div class="kategori-block">
+                <span class="meta-label">Predikat Indeks:</span>
+                <div id="lblKategori" class="kategori">Kategori: -</div>
+              </div>
+            </div>
+
+            <!-- GRAFIK LANDSCAPE CAPAIAN DISTRIBUSI NILAI -->
+            <div class="grafik-landscape-box">
+              <div class="grafik-header">
+                <div class="grafik-title-group">
+                  <span class="grafik-badge">Grafik Distribusi</span>
+                  <span class="grafik-title-text">Distribusi Capaian Kompetensi Mahasiswa (Skala Desil 0&ndash;100)</span>
+                </div>
+                <div class="grafik-score-badge">
+                  <span>Skor Capaian:</span>
+                  <strong id="barPersenText" class="bar-persen-text">-</strong>
+                </div>
+              </div>
+
+              <!-- Baris Karakter Visual Monospace (Hasil Loop For Modul Dosen) -->
+              <div class="ascii-bar-wrapper">
+                <div class="ascii-bar-meta">
+                  <span>Blok Desil (1 Blok = 10 Poin):</span>
+                </div>
+                <div id="lblBar" class="bar">░░░░░░░░░░  0/100</div>
+              </div>
+
+              <!-- Grafik Batang Horizontal (Landscape Track) dengan Indikator Ambang Batas Kelulusan -->
+              <div class="landscape-track-container">
+                <div class="progress-track-landscape" aria-hidden="true">
+                  <div id="progressBarFill" class="progress-fill" style="width: 0%"></div>
+                  <!-- Marker Garis Ambang Batas 60% -->
+                  <div class="benchmark-line" title="Ambang Batas Kelulusan Minimal (60 Poin)">
+                    <span class="benchmark-flag">Ambang Lulus (60)</span>
+                  </div>
+                </div>
+
+                <!-- Skala Angka Sumbu Horizontal (Horizontal Axis Scale) -->
+                <div class="scale-axis">
+                  <span class="tick tick-0">0</span>
+                  <span class="tick tick-20">20</span>
+                  <span class="tick tick-40">40</span>
+                  <span class="tick tick-60 active-benchmark">60 (Batas Lulus)</span>
+                  <span class="tick tick-80">80</span>
+                  <span class="tick tick-100">100 (Maksimal)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analisis Kualitatif Hasil Evaluasi -->
+            <div class="pesan-box">
+              <span class="pesan-icon">📋</span>
+              <div class="pesan-content">
+                <span class="pesan-header-title">Analisis Rekomendasi Akademik:</span>
+                <p id="lblPesan" class="pesan">Silakan input data nilai dan presensi, lalu tekan tombol EVALUASI CAPAIAN.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PANEL RIWAYAT LOG & STATISTIK AKUMULASI (FOR...OF) -->
+        <section class="panel panel-riwayat" aria-labelledby="judul-riwayat">
+          <div class="panel-header">
+            <h2 id="judul-riwayat" class="judul-panel">LOG REKAPITULASI &amp; RATA-RATA AKUMULASI</h2>
+            <div id="lblRata" class="rata">Rata-rata: -</div>
+          </div>
+
+          <!-- Container list riwayat -->
+          <ul id="lstRiwayat" class="riwayat" aria-live="polite"></ul>
+
+          <footer class="riwayat-footer">
+            <span class="note-teks">&bull; Komputasi rata-rata nilai kumulatif diproses secara otomatis via perulangan <code>for...of</code>.</span>
+          </footer>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
